@@ -26,7 +26,7 @@ jobs:
       - name: SonarQube Scan
         run: |
           mvn -B verify sonar:sonar \
-            -Dsonar.projectKey=web-calci \
+            -Dsonar.projectKey=vprofile-actions \
             -Dsonar.host.url=${{ vars.SONAR_HOST_URL }} \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
       # 4. Build with Maven (after scan)
@@ -43,13 +43,13 @@ jobs:
       # 6. Build Docker image (locally first)
       - name: Build Docker image
         run: |
-          IMAGE=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/web-calci
+          IMAGE=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/vprofile-actions
           docker build -t $IMAGE:latest -t $IMAGE:${{ github.sha }} .
       # 7. Trivy Scan (before pushing)
       - name: Trivy Scan Docker image
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/web-calci:latest
+          image-ref: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/vprofile-actions:latest
           format: 'table'
           exit-code: '0'    # don’t fail build on vulnerabilities
           ignore-unfixed: true
