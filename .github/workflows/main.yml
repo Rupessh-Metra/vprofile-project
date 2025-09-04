@@ -91,7 +91,7 @@ jobs:
         
      # 4. Apply Deployment manifest (creates if missing, updates if exists)
       - name: Apply Kubernetes Deployment
-        run: kubectl apply -f k8s/deployment.yaml
+        run: kubectl apply -f dep.yml
 
 
 
