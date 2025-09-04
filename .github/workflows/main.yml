@@ -68,5 +68,32 @@ jobs:
           docker push $IMAGE:${{ github.sha }}
 
 
+      deploy-to-eks:
+    runs-on: ubuntu-latest
+    needs: Testing
+
+    steps:
+      # 1. Checkout repo (for k8s manifests if needed)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # 3. Update kubeconfig for EKS
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name my-cluster --region us-east-1
+        
+     # 4. Apply Deployment manifest (creates if missing, updates if exists)
+      - name: Apply Kubernetes Deployment
+        run: kubectl apply -f k8s/deployment.yaml
+
+
+
 
 
