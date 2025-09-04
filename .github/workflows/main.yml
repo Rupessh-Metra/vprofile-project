@@ -38,5 +38,19 @@ jobs:
            -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml
            -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/
 
+     # 5. Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 6. Build Docker image (locally first)
+      - name: Build Docker image
+        run: |
+          IMAGE=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/vprofile4sep
+          docker build -t $IMAGE:latest -t $IMAGE:${{ github.sha }} .
+
+
 
 
