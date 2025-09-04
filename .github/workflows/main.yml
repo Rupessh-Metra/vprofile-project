@@ -6,3 +6,10 @@ jobs:
     steps:
       - name: Code checkout
         uses: actions/checkout@v4
+
+      - name: Maven package
+        run: mvn package
+
+      - name: Checkstyle
+        run: mvn checkstyle:checkstyle
+
