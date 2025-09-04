@@ -51,6 +51,22 @@ jobs:
           IMAGE=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/vprofile4sep
           docker build -t $IMAGE:latest -t $IMAGE:${{ github.sha }} .
 
+      # 7. Trivy Scan (before pushing)
+      - name: Trivy Scan Docker image
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/vprofile4sep:latest
+          format: 'table'
+          exit-code: '0'    # don’t fail build on vulnerabilities
+          ignore-unfixed: true
+
+      # 8. Push Docker image
+      - name: Push Docker image
+        run: |
+          IMAGE=docker.io/${{ secrets.DOCKERHUB_USERNAME }}/vprofile4sep
+          docker push $IMAGE:latest
+          docker push $IMAGE:${{ github.sha }}
+
 
 
 
